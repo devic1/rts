@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Salary Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .card-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .earnings {
+            text-align: center;
+        }
+        .earnings p:first-child {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .earnings p:last-child {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 class="card-title">Real-time Salary Calculator</h2>
+        <div class="input-group">
+            <label for="salary">Monthly Salary (in Rupees)</label>
+            <input type="text" id="salary" placeholder="Enter your monthly salary">
+        </div>
+        <div class="earnings">
+            <p>Earnings this month:</p>
+            <p id="earnings">₹0.00</p>
+        </div>
+    </div>
+
+    <script>
+        const salaryInput = document.getElementById('salary');
+        const earningsDisplay = document.getElementById('earnings');
+        let monthlySalary = 0;
+
+        salaryInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (/^\d*$/.test(value)) {
+                monthlySalary = parseFloat(value);
+            }
+        });
+
+        function updateEarnings() {
+            if (monthlySalary) {
+                const now = new Date();
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                const secondsElapsed = (now - startOfMonth) / 1000;
+                const secondsInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() * 24 * 60 * 60;
+                const earningsPerSecond = monthlySalary / secondsInMonth;
+                const earnings = earningsPerSecond * secondsElapsed;
+                
+                const rupees = Math.floor(earnings);
+                const paisa = Math.round((earnings - rupees) * 100);
+                earningsDisplay.textContent = `₹${rupees}.${paisa.toString().padStart(2, '0')}`;
+            }
+        }
+
+        setInterval(updateEarnings, 1000);
+    </script>
+</body>
+</html>
