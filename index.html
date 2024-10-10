@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-time Salary Calculator</title>
+    <title>Real-time Salary Calculator | Track Your Earnings</title>
+    <meta name="description" content="Calculate your real-time earnings and estimate how long it will take to reach your financial goals with our easy-to-use salary calculator.">
+    <meta name="keywords" content="salary calculator, earnings tracker, financial planning, income calculator">
+    <meta name="author" content="Deepak Victor A">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,7 +66,7 @@
 </head>
 <body>
     <div class="card">
-        <h2 class="card-title">Real-time Salary Calculator</h2>
+        <h1 class="card-title">Real-time Salary Calculator</h1>
         <div class="input-group">
             <label for="salary">Monthly Salary (in Rupees)</label>
             <input type="text" id="salary" placeholder="Enter your monthly salary">
@@ -121,11 +126,15 @@
         function updateTimeToEarn() {
             if (monthlySalary && targetAmount) {
                 const monthsToEarn = targetAmount / monthlySalary;
-                const days = Math.floor(monthsToEarn * 30);
-                const hours = Math.floor((monthsToEarn * 30 - days) * 24);
-                const minutes = Math.floor(((monthsToEarn * 30 - days) * 24 - hours) * 60);
+                const years = Math.floor(monthsToEarn / 12);
+                const remainingMonths = Math.floor(monthsToEarn % 12);
+                const days = Math.floor((monthsToEarn % 1) * 30);
+                const hours = Math.floor(((monthsToEarn % 1) * 30 - days) * 24);
+                const minutes = Math.floor((((monthsToEarn % 1) * 30 - days) * 24 - hours) * 60);
 
                 let timeString = '';
+                if (years > 0) timeString += `${years} year${years > 1 ? 's' : ''} `;
+                if (remainingMonths > 0) timeString += `${remainingMonths} month${remainingMonths > 1 ? 's' : ''} `;
                 if (days > 0) timeString += `${days} day${days > 1 ? 's' : ''} `;
                 if (hours > 0) timeString += `${hours} hour${hours > 1 ? 's' : ''} `;
                 if (minutes > 0) timeString += `${minutes} minute${minutes > 1 ? 's' : ''}`;
