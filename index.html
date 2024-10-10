@@ -10,16 +10,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .card {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 90%;
+            width: 100%;
             max-width: 400px;
         }
         .card-title {
@@ -40,16 +42,18 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
+            box-sizing: border-box;
         }
-        .earnings {
+        .earnings, .time-to-earn {
             text-align: center;
+            margin-bottom: 20px;
         }
-        .earnings p:first-child {
+        .earnings p:first-child, .time-to-earn p:first-child {
             font-size: 1.2em;
             margin-bottom: 5px;
         }
-        .earnings p:last-child {
-            font-size: 2em;
+        .earnings p:last-child, .time-to-earn p:last-child {
+            font-size: 1.5em;
             font-weight: bold;
             color: #4CAF50;
         }
@@ -66,17 +70,36 @@
             <p>Earnings this month:</p>
             <p id="earnings">₹0.00</p>
         </div>
+        <div class="input-group">
+            <label for="target-amount">Target Amount (in Rupees)</label>
+            <input type="text" id="target-amount" placeholder="Enter target amount">
+        </div>
+        <div class="time-to-earn">
+            <p>Time to earn target amount:</p>
+            <p id="time-to-earn">-</p>
+        </div>
     </div>
-
     <script>
         const salaryInput = document.getElementById('salary');
         const earningsDisplay = document.getElementById('earnings');
+        const targetAmountInput = document.getElementById('target-amount');
+        const timeToEarnDisplay = document.getElementById('time-to-earn');
         let monthlySalary = 0;
+        let targetAmount = 0;
 
         salaryInput.addEventListener('input', (e) => {
             const value = e.target.value;
             if (/^\d*$/.test(value)) {
                 monthlySalary = parseFloat(value);
+                updateTimeToEarn();
+            }
+        });
+
+        targetAmountInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (/^\d*$/.test(value)) {
+                targetAmount = parseFloat(value);
+                updateTimeToEarn();
             }
         });
 
@@ -92,6 +115,24 @@
                 const rupees = Math.floor(earnings);
                 const paisa = Math.round((earnings - rupees) * 100);
                 earningsDisplay.textContent = `₹${rupees}.${paisa.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function updateTimeToEarn() {
+            if (monthlySalary && targetAmount) {
+                const monthsToEarn = targetAmount / monthlySalary;
+                const days = Math.floor(monthsToEarn * 30);
+                const hours = Math.floor((monthsToEarn * 30 - days) * 24);
+                const minutes = Math.floor(((monthsToEarn * 30 - days) * 24 - hours) * 60);
+
+                let timeString = '';
+                if (days > 0) timeString += `${days} day${days > 1 ? 's' : ''} `;
+                if (hours > 0) timeString += `${hours} hour${hours > 1 ? 's' : ''} `;
+                if (minutes > 0) timeString += `${minutes} minute${minutes > 1 ? 's' : ''}`;
+
+                timeToEarnDisplay.textContent = timeString.trim() || 'Less than a minute';
+            } else {
+                timeToEarnDisplay.textContent = '-';
             }
         }
 
